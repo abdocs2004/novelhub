@@ -1,0 +1,17 @@
+# Optional: starts PostgreSQL in Docker with the same settings as application.yml.
+#   docker compose up -d
+services:
+  postgres:
+    image: postgres:16
+    container_name: novelhub-postgres
+    environment:
+      POSTGRES_DB: novelhub
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+    ports:
+      - "5432:5432"
+    volumes:
+      - novelhub-data:/var/lib/postgresql/data
+
+volumes:
+  novelhub-data:

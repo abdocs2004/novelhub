@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: novelhub
+  datasource:
+    # Change these if your PostgreSQL setup is different (or set the env vars).
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/novelhub}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:change_me}
+  jpa:
+    hibernate:
+      # "update" creates/updates tables automatically. Great for learning,
+      # but in production use a migration tool (Flyway / Liquibase) instead.
+      ddl-auto: update
+    # We map entities to DTOs inside services (inside a transaction), so we
+    # don't need the session open while rendering the response.
+    open-in-view: false
+    show-sql: false
+
+app:
+  jwt:
+    # HS256 needs at least 32 bytes. NEVER commit a real secret: use the env var.
+    secret: ${JWT_SECRET:dev-only-secret-change-me-it-must-be-at-least-32-bytes-long}
+    expiration-ms: 86400000   # 24 hours
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+  admin:
+    # An ADMIN user is created on startup if this email does not exist yet.
+    name: ${ADMIN_NAME:Admin}
+    email: ${ADMIN_EMAIL:admin@novelhub.local}
+    password: ${ADMIN_PASSWORD:change_me_admin_password}
+  # Inserts one demo novel with 3 chapters when the novels table is empty.
+  seed-demo-data: ${SEED_DEMO_DATA:true}
+  payment:
+    # "mock" = fake payment that always succeeds. Add a real provider later
+    # (see PaymentService) and switch this value.
+    provider: mock
+
+logging:
+  level:
+    com.novelhub: INFO
